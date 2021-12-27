@@ -18,10 +18,9 @@
 #include <iostream>
 #include <cmath>
 
-#define rayonCylidnre 5
-#define tailleCylidnre 15
+#define rayonCylidnre 4.0
+#define tailleCylidnre 15.0
 #define cranCylindre 50
-#define tailleCylidnre 10
 #define taillePlan 20.0
 #define nbPointImage 8
 
@@ -35,12 +34,12 @@ void processSpecialKeys(int key, int xx, int yy);
 char presse;
 int anglex,angley,x,y,xold,yold;
 
-double posx = 12.0;
-double posy = 12.0;
-double posz = 8.0;
+double posx = 0.0;
+double posy = -20.0;
+double posz = 12.0;
 double orix = 0.0;
-double oriy = 5.0;
-double oriz = -2.0;
+double oriy = 0.0;
+double oriz = 1.0;
 double upx = 0.0;
 double upy = 1.0;
 double upz = 0.0;
@@ -67,57 +66,46 @@ Point plan[4];
 int fplan[4];
 
 Point objet[nbPointImage];
-int fobjet[6][4];
+int fobjet[2][4];
 
 Point imageReflete[nbPointImage];
+//int fimageReflete[4];
+int fimageReflete[2][4];
 
 void genererObjet(){
+
     Point tmp;
-    tmp.x = -3.0;tmp.y = 1.0;tmp.z = -3.0;
+    tmp.x = -3.0;tmp.y = 0.0;tmp.z = 3.0;
     tmp.r = 0.4;tmp.g = 0.2;tmp.b = 0.0;
     objet[0] = tmp;
     Point tmp2;
-    tmp2.x = 3.0;tmp2.y = 1.0;tmp2.z = -3.0;
+    tmp2.x = 3.0;tmp2.y = 0.0;tmp2.z = 3.0;
     tmp2.r = 0.4;tmp2.g = 0.2;tmp2.b = 0.0;
     objet[1] = tmp2;
     Point tmp3;
-    tmp3.x = -3.0;tmp3.y = 1.0;tmp3.z = 3.0;
+    tmp3.x = -3.0;tmp3.y = 0.0;tmp3.z = 9.0;
     tmp3.r = 0.4;tmp3.g = 0.2;tmp3.b = 0.0;
     objet[2] = tmp3;
     Point tmp4;
-    tmp4.x = 3.0;tmp4.y = 1.0;tmp4.z = 3.0;
+    tmp4.x = 3.0;tmp4.y = 0.0;tmp4.z = 9.0;
     tmp4.r = 0.4;tmp4.g = 0.2;tmp4.b = 0.0;
     objet[3] = tmp4;
-    Point tmp5;
-    tmp5.x = -3.0;tmp5.y = 7.0;tmp5.z = -3.0;
-    tmp5.r = 0.4;tmp5.g = 0.2;tmp5.b = 0.0;
-    objet[4] = tmp5;
-    Point tmp6;
-    tmp6.x = 3.0;tmp6.y = 7.0;tmp6.z = -3.0;
-    tmp6.r = 0.4;tmp6.g = 0.2;tmp6.b = 0.0;
-    objet[5] = tmp6;
-    Point tmp7;
-    tmp7.x = -3.0;tmp7.y = 7.0;tmp7.z = 3.0;
-    tmp7.r = 0.4;tmp7.g = 0.2;tmp7.b = 0.0;
-    objet[6] = tmp7;
-    Point tmp8;
-    tmp8.x = 3.0;tmp8.y = 7.0;tmp8.z = 3.0;
-    tmp8.r = 0.4;tmp8.g = 0.2;tmp8.b = 0.0;
-    objet[7] = tmp8;
+    tmp4.x = 0.0;tmp4.y = 0.0;tmp4.z = 11.0;
+    tmp4.r = 0.4;tmp4.g = 0.2;tmp4.b = 0.0;
+    objet[4] = tmp4;
+    tmp4.x = 0.0;tmp4.y = 0.0;tmp4.z = 3.0;
+    tmp4.r = 0.4;tmp4.g = 0.2;tmp4.b = 0.0;
+    objet[5] = tmp4;
 
-    fobjet[0][0] = 0;fobjet[0][1] = 1;fobjet[0][2] = 3;fobjet[0][3] = 2;
-    fobjet[1][0] = 1;fobjet[1][1] = 3;fobjet[1][2] = 7;fobjet[1][3] = 5;
-    fobjet[2][0] = 0;fobjet[2][1] = 2;fobjet[2][2] = 6;fobjet[2][3] = 4;
-    fobjet[3][0] = 0;fobjet[3][1] = 1;fobjet[3][2] = 5;fobjet[3][3] = 4;
-    fobjet[4][0] = 2;fobjet[4][1] = 3;fobjet[4][2] = 7;fobjet[4][3] = 6;
-    fobjet[5][0] = 4;fobjet[5][1] = 5;fobjet[5][2] = 7;fobjet[5][3] = 6;
+    fobjet[0][0] = 0;fobjet[0][1] = 5;fobjet[0][2] = 4;fobjet[0][3] = 2;
+    fobjet[1][0] = 1;fobjet[1][1] = 5;fobjet[1][2] = 4;fobjet[1][3] = 3;
 }
 
 void genererPlan(){
     Point tmp;
     tmp.x = -taillePlan;
-    tmp.y = 0.0;
-    tmp.z = -taillePlan;
+    tmp.y = -taillePlan;
+    tmp.z = 0.0;
 
     tmp.r = 1.0;
     tmp.g = 1.0;
@@ -127,8 +115,8 @@ void genererPlan(){
 
     Point tmp2;
     tmp2.x = -taillePlan;
-    tmp2.y = 0.0;
-    tmp2.z = taillePlan;
+    tmp2.y = taillePlan;
+    tmp2.z = 0.0;
     tmp2.r = 1.0;
     tmp2.g = 1.0;
     tmp2.b = 1.0;
@@ -136,8 +124,8 @@ void genererPlan(){
 
     Point tmp3;
     tmp3.x = taillePlan;
-    tmp3.y = 0.0;
-    tmp3.z = taillePlan;
+    tmp3.y = taillePlan;
+    tmp3.z = 0.0;
     tmp3.r = 1.0;
     tmp3.g = 1.0;
     tmp3.b = 1.0;
@@ -145,8 +133,8 @@ void genererPlan(){
 
     Point tmp4;
     tmp4.x = taillePlan;
-    tmp4.y = 0.0;
-    tmp4.z = -taillePlan;
+    tmp4.y = -taillePlan;
+    tmp4.z = 0.0;
     tmp4.r = 1.0;
     tmp4.g = 1.0;
     tmp4.b = 1.0;
@@ -164,12 +152,12 @@ void genererCylindre(){
     for(int i = 0;i<cranCylindre;i++){
             Point tmp;
             tmp.x = rayonCylidnre*cos(i*(2*M_PI/cranCylindre));
-            tmp.y = 0;
-            tmp.z = rayonCylidnre*sin(i*(2*M_PI/cranCylindre));
+            tmp.y = rayonCylidnre*sin(i*(2*M_PI/cranCylindre));
+            tmp.z = 0;
 
             tmp.r = 1.0;
-            tmp.g = 0.0;
-            tmp.b = 0.0;
+            tmp.g = 1.0;
+            tmp.b = 1.0;
 
             cylindre[cpt] = tmp;
             cpt++;
@@ -177,11 +165,11 @@ void genererCylindre(){
     for(int i = 0;i<cranCylindre;i++){
             Point tmp;
             tmp.x = rayonCylidnre*cos(i*(2*M_PI/cranCylindre));
-            tmp.y = tailleCylidnre;
-            tmp.z = rayonCylidnre*sin(i*(2*M_PI/cranCylindre));
+            tmp.y = rayonCylidnre*sin(i*(2*M_PI/cranCylindre));
+            tmp.z = tailleCylidnre;
 
-            tmp.r = 0.0;
-            tmp.g = 0.0;
+            tmp.r = 1.0;
+            tmp.g = 1.0;
             tmp.b = 1.0;
 
             cylindre[cpt] = tmp;
@@ -214,23 +202,23 @@ void genererImageDeforme(){
     double k;
     double alpha;
 
-    pv.x = posx;
-    pv.y = posy;
-    pv.z = posz;
-
-    for(int i=0;i<8;i++){
+    //for(int i=0;i<8;i++){
+    for(int i=0;i<6;i++){
+        pv.x = posx;
+        pv.y = posy;
+        pv.z = posz;
         pP.x = objet[i].x;
         pP.y = objet[i].y;
         pP.z = objet[i].z;
         Point tmp;
-        a = (pv.x-pP.x)*(pv.x-pP.x)+(pv.z+pP.z)*(pv.z+pP.z);
-        b = pv.x*pP.x + pv.z*pP.z - pv.x*pv.x - pv.z*pv.z;
-        c = pv.x*pv.x + pv.z*pv.z - rayonCylidnre*rayonCylidnre;
+        a = (pv.x-pP.x)*(pv.x-pP.x)+(pv.y+pP.y)*(pv.y+pP.y);
+        b = pv.x*pP.x + pv.y*pP.y - pv.x*pv.x - pv.y*pv.y;
+        c = pv.x*pv.x + pv.y*pv.y - rayonCylidnre*rayonCylidnre;
 
-        delta = b*b - a*c;
+        delta = (2*b)*(2*b) - 4*a*c;
 
-        pprime = (-b+sqrt(delta))/(a);
-        pn = (-b-sqrt(delta))/(a);
+        pprime = (-b*2+sqrt(delta))/(2*a);
+        pn = (-b*2-sqrt(delta))/(2*a);
 
         if(pn<0){
             p = pprime;
@@ -249,25 +237,27 @@ void genererImageDeforme(){
         pI.z = pv.z*(1-p)+p*pP.z;
 
 
-        k = (2/(rayonCylidnre*rayonCylidnre))*(pv.x*pI.x+pv.z*pI.z);
+        k = (2/(rayonCylidnre*rayonCylidnre))*(pv.x*pI.x+pv.y*pI.y);
 
         pvprime.x = k*pI.x-pv.x;
-        pvprime.z = k*pI.z-pv.z;
-        pvprime.y = pv.y*(1-2*p);
+        pvprime.z = k*pI.y-pv.y;
+        pvprime.y = pv.z*(1-2*p);
 
-        alpha = (pv.y*(1-2*p)+pP.y*p)/(-pv.y*p+p*pP.y);
+        alpha = (pv.z*(1-2*p)+pP.z*p)/(-pv.z*p+p*pP.z);
 
 
         tmp.x = pvprime.x-alpha*(pvprime.x-pI.x);
-        tmp.y = 0.0;
-        tmp.z = pvprime.z-alpha*(pvprime.z-pI.z);
+        tmp.y = pvprime.y-alpha*(pvprime.y-pI.y);
+        tmp.z = 0.1;
 
-        tmp.r = 0.3;tmp.g = 0.0;tmp.b = 0.4;
 
-        printf("%d : %f \n",i,tmp.x);
+        tmp.r = objet[i].r;tmp.g = objet[i].g;tmp.b = objet[i].b;
+
+        printf("%d : %f \n",i,tmp.y);
         imageReflete[i] = tmp;
     }
-
+    fimageReflete[0][0] = 0;fimageReflete[0][1] = 5;fimageReflete[0][2] = 4;fimageReflete[0][3] = 2;
+    fimageReflete[1][0] = 1;fimageReflete[1][1] = 5;fimageReflete[1][2] = 4;fimageReflete[1][3] = 3;
 
 }
 
@@ -285,13 +275,15 @@ int main(int argc,char **argv)
   glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
   glutInitWindowPosition(200,200);
   glutInitWindowSize(500,500);
-  glutCreateWindow("cube");
+  glutCreateWindow("Anamorphoses");
 
   /* Initialisation d'OpenGL */
   glClearColor(0.0,0.0,0.0,0.0);
   glColor3f(1.0,1.0,1.0);
-  glPointSize(2.0);
+  glPointSize(4.0);
   glEnable(GL_DEPTH_TEST);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
   /* enregistrement des fonctions de rappel */
   glutDisplayFunc(affichage);
@@ -326,10 +318,11 @@ void affichage()
   glRotatef(angley,1.0,0.0,0.0);
   glRotatef(anglex,0.0,1.0,0.0);
 
+    glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
     //Génération cylindre
     glBegin(GL_POINTS);
       for (int i=0;i<cranCylindre*2;i++){
-          glColor3f(cylindre[i].r,cylindre[i].g,cylindre[i].b);
+          glColor4f(cylindre[i].r,cylindre[i].g,cylindre[i].b,0.5);
           glVertex3f(cylindre[i].x,cylindre[i].y,cylindre[i].z);
       }
       glEnd();
@@ -338,12 +331,13 @@ void affichage()
     {
       glBegin(GL_POLYGON);
       for (j=0;j<4;j++){
-          glColor3f(cylindre[fcylindre[i][j]].r,cylindre[fcylindre[i][j]].g,cylindre[fcylindre[i][j]].b);
+          glColor4f(cylindre[fcylindre[i][j]].r,cylindre[fcylindre[i][j]].g,cylindre[fcylindre[i][j]].b,0.5);
           glVertex3f(cylindre[fcylindre[i][j]].x,cylindre[fcylindre[i][j]].y,cylindre[fcylindre[i][j]].z);
       }
       glEnd();
     }
 
+    glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
     //Génération Plan
     glBegin(GL_POINTS);
       for (int i=0;i<4;i++){
@@ -367,7 +361,7 @@ void affichage()
       }
       glEnd();
 
-    for(int i = 0;i<6;i++){
+    for(int i = 0;i<2;i++){
       glBegin(GL_POLYGON);
         for (j=0;j<4;j++){
           glColor3f(objet[fobjet[i][j]].r,objet[fobjet[i][j]].g,objet[fobjet[i][j]].b);
@@ -376,13 +370,22 @@ void affichage()
       glEnd();
       }
 
-      //Génération Objet
+      //Génération image reflete
       glBegin(GL_POINTS);
       for (int i=0;i<nbPointImage;i++){
           glColor3f(imageReflete[i].r,imageReflete[i].g,imageReflete[i].b);
           glVertex3f(imageReflete[i].x,imageReflete[i].y,imageReflete[i].z);
       }
       glEnd();
+
+      for(int i = 0;i<2;i++){
+      glBegin(GL_POLYGON);
+        for (j=0;j<4;j++){
+          glColor3f(imageReflete[fimageReflete[i][j]].r,imageReflete[fimageReflete[i][j]].g,imageReflete[fimageReflete[i][j]].b);
+          glVertex3f(imageReflete[fimageReflete[i][j]].x,imageReflete[fimageReflete[i][j]].y,imageReflete[fimageReflete[i][j]].z);
+        }
+      glEnd();
+      }
 
   glFlush();
     gluLookAt(posx,posy,posz,orix,oriy,oriz,upx,upy,upz);
@@ -432,10 +435,10 @@ void processSpecialKeys(int key, int xx, int yy) {
 			posx =posx+0.5;
 			break;
 		case GLUT_KEY_UP :
-			posz =posz-0.5;
+			posy =posy-0.5;
 			break;
 		case GLUT_KEY_DOWN :
-			posz =posz+0.5;
+			posy =posy+0.5;
 			break;
 	}
 }
