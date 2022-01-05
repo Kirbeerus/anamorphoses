@@ -34,6 +34,7 @@ void processSpecialKeys(int key, int xx, int yy);
 char presse;
 int anglex,angley,x,y,xold,yold;
 
+//Variable pour gérer la position de la caméra
 double posx = 0.0;
 double posy = -20.0;
 double posz = 12.0;
@@ -58,22 +59,26 @@ class Point{
 };
 
 
-
+//Variable pour stocker la forme du cylindre
 Point cylindre[cranCylindre*2];
 int fcylindre[cranCylindre*2+1][4];
 
+//Variable pour stocker le plan
 Point plan[4];
 int fplan[4];
 
+//Variable pour stocker l'image non déformer
 Point objet[nbPointImage];
 int fobjet[2][4];
 
+//Variable pour stocker l'image deformer
 Point imageReflete[nbPointImage];
-//int fimageReflete[4];
 int fimageReflete[2][4];
 
+//Fonction qui génère l'image non déformer
 void genererObjet(){
 
+    //On créer les points
     Point tmp;
     tmp.x = -3.0;tmp.y = 0.0;tmp.z = 3.0;
     tmp.r = 0.4;tmp.g = 0.2;tmp.b = 0.0;
@@ -97,11 +102,14 @@ void genererObjet(){
     tmp4.r = 0.4;tmp4.g = 0.2;tmp4.b = 0.0;
     objet[5] = tmp4;
 
+    //On enregistre les faces
     fobjet[0][0] = 0;fobjet[0][1] = 5;fobjet[0][2] = 4;fobjet[0][3] = 2;
     fobjet[1][0] = 1;fobjet[1][1] = 5;fobjet[1][2] = 4;fobjet[1][3] = 3;
 }
 
+//Fonction pour génerer le plan 2D
 void genererPlan(){
+    //On généère les 4 coin du plan
     Point tmp;
     tmp.x = -taillePlan;
     tmp.y = -taillePlan;
@@ -140,6 +148,7 @@ void genererPlan(){
     tmp4.b = 1.0;
     plan[3] = tmp4;
 
+    //On créer la faces pour faire le plan
     fplan[0] = 0;
     fplan[1] = 1;
     fplan[2] = 2;
@@ -147,11 +156,13 @@ void genererPlan(){
 }
 
 
+//Fonction pour generer le cylindre
 void genererCylindre(){
     int cpt = 0;
+    //On calcule tout les point du cercle du bas
     for(int i = 0;i<cranCylindre;i++){
             Point tmp;
-            tmp.x = rayonCylidnre*cos(i*(2*M_PI/cranCylindre));
+            tmp.x = rayonCylidnre*cos(i*(2*M_PI/cranCylindre));//Formule d'un cercle
             tmp.y = rayonCylidnre*sin(i*(2*M_PI/cranCylindre));
             tmp.z = 0;
 
@@ -162,6 +173,7 @@ void genererCylindre(){
             cylindre[cpt] = tmp;
             cpt++;
     }
+    //On calcule tout les points du cercle du haut
     for(int i = 0;i<cranCylindre;i++){
             Point tmp;
             tmp.x = rayonCylidnre*cos(i*(2*M_PI/cranCylindre));
@@ -177,7 +189,9 @@ void genererCylindre(){
     }
 };
 
+//Génération des faces du cylindre
 void genereFaceCylindreQuadra(){
+        //On relie les les points du cercle du haut et du bas pour créer le cylindre
         for(int i=0;i< cranCylindre*2+1;i++){
             fcylindre[i][0] = i;
             fcylindre[i][1] = (i+1)%(cranCylindre*2);
@@ -187,11 +201,13 @@ void genereFaceCylindreQuadra(){
 
 }
 
+//Fonction qui génère l'image deformer
 void genererImageDeforme(){
+    //On initialise toutes les variables nécéssaire au différents calcules
     Point pvprime;
     Point pI;
-    Point pv;
-    Point pP;
+    Point pv; //Point correspondant à la caméra
+    Point pP; //Point correspondant à un point de l'image
     double p;
     double pprime;
     double pn;
@@ -202,24 +218,25 @@ void genererImageDeforme(){
     double k;
     double alpha;
 
-    //for(int i=0;i<8;i++){
+    //On à une boucle de taille 6 car il y a  6 point sur l'image non déformer
     for(int i=0;i<6;i++){
         pv.x = posx;
         pv.y = posy;
         pv.z = posz;
-        pP.x = objet[i].x;
+        pP.x = objet[i].x;  //On récupère les coordonnées d'un point de l'image non déformer que l'on injecte dans pP
         pP.y = objet[i].y;
         pP.z = objet[i].z;
-        Point tmp;
+        Point tmp;  //On créer un point qui contiendra les coordonnées finale
+        //On calcule les trois éléments du polynome du second degré.
         a = (pv.x-pP.x)*(pv.x-pP.x)+(pv.y+pP.y)*(pv.y+pP.y);
         b = pv.x*pP.x + pv.y*pP.y - pv.x*pv.x - pv.y*pv.y;
         c = pv.x*pv.x + pv.y*pv.y - rayonCylidnre*rayonCylidnre;
-
+        //On calcule delta pour trouver les solutions
         delta = (2*b)*(2*b) - 4*a*c;
-
+        //On calcule les solutions
         pprime = (-b*2+sqrt(delta))/(2*a);
         pn = (-b*2-sqrt(delta))/(2*a);
-
+        //On garde la solution positive la plus petites
         if(pn<0){
             p = pprime;
         }else if(pprime<0){
@@ -231,21 +248,21 @@ void genererImageDeforme(){
         }
 
         printf("%f \n",delta);
-
+        //On calcule les coordonnées de pI le point d'instersection entre le cylindre et le vecteur pPpV
         pI.x = pv.x*(1-p)+p*pP.x;
         pI.y = pv.y*(1-p)+p*pP.y;
         pI.z = pv.z*(1-p)+p*pP.z;
 
-
+        //On récupère k qui sera nécéssaire au calcul de v',
         k = (2/(rayonCylidnre*rayonCylidnre))*(pv.x*pI.x+pv.y*pI.y);
-
+        //On calcule pvprime le point symétrique de pv par rapport à la normal au mirroir en I
         pvprime.x = k*pI.x-pv.x;
         pvprime.z = k*pI.y-pv.y;
         pvprime.y = pv.z*(1-2*p);
-
+        //On calcule alpha
         alpha = (pv.z*(1-2*p)+pP.z*p)/(-pv.z*p+p*pP.z);
 
-
+        //On calcule finalement le point de l'objet déformer
         tmp.x = pvprime.x-alpha*(pvprime.x-pI.x);
         tmp.y = pvprime.y-alpha*(pvprime.y-pI.y);
         tmp.z = 0.1;
@@ -256,6 +273,8 @@ void genererImageDeforme(){
         printf("%d : %f \n",i,tmp.y);
         imageReflete[i] = tmp;
     }
+    //On créer les faces de l'objet deformer
+    //Il suffit juste de prendre les point de l'image deformer et les les lier entre  eux comme pour l'image non deformer
     fimageReflete[0][0] = 0;fimageReflete[0][1] = 5;fimageReflete[0][2] = 4;fimageReflete[0][3] = 2;
     fimageReflete[1][0] = 1;fimageReflete[1][1] = 5;fimageReflete[1][2] = 4;fimageReflete[1][3] = 3;
 
@@ -265,6 +284,7 @@ int main(int argc,char **argv)
 {
   /* initialisation de glut et creation
      de la fenetre */
+     //On génère tout les points
   genererCylindre();
   genereFaceCylindreQuadra();
   genererObjet();
@@ -289,10 +309,10 @@ int main(int argc,char **argv)
   glutDisplayFunc(affichage);
   glutKeyboardFunc(clavier);
   glutReshapeFunc(reshape);
-  glutIdleFunc(affichage);
+  glutIdleFunc(affichage);  //De cette façon on modifie l'affichage lordque l'on déplace la caméra
   glutMouseFunc(mouse);
   glutMotionFunc(mousemotion);
-  glutSpecialFunc(processSpecialKeys);
+  glutSpecialFunc(processSpecialKeys);  //Fonction de déplacement de la caméra
 
   glMatrixMode( GL_PROJECTION );
      glLoadIdentity();
@@ -304,7 +324,7 @@ int main(int argc,char **argv)
   return 0;
 }
 
-
+//Fonction d'affichage des différents figure
 void affichage()
 {
   int i,j;
@@ -388,7 +408,7 @@ void affichage()
       }
 
   glFlush();
-    gluLookAt(posx,posy,posz,orix,oriy,oriz,upx,upy,upz);
+    gluLookAt(posx,posy,posz,orix,oriy,oriz,upx,upy,upz);   //On place la caméra
   //On echange les buffers
   glutSwapBuffers();
 }
@@ -423,21 +443,22 @@ void clavier(unsigned char touche,int x,int y)
     }
 }
 
+//Touche pour deplacer la caméra
 void processSpecialKeys(int key, int xx, int yy) {
 
 	float fraction = 0.1f;
 
 	switch (key) {
 		case GLUT_KEY_LEFT :
-			posx =posx-0.5;
+			posx =posx-0.5; //On déplace la caméra à gauche
 			break;
-		case GLUT_KEY_RIGHT :
+		case GLUT_KEY_RIGHT :   //On déplace la caméra à droite
 			posx =posx+0.5;
 			break;
-		case GLUT_KEY_UP :
+		case GLUT_KEY_UP :  //On avance la caméra
 			posy =posy-0.5;
 			break;
-		case GLUT_KEY_DOWN :
+		case GLUT_KEY_DOWN :    //On éloigne la caméra
 			posy =posy+0.5;
 			break;
 	}
