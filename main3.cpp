@@ -22,7 +22,7 @@
 #define tailleCylidnre 15.0
 #define cranCylindre 50
 #define taillePlan 20.0
-#define nbPointImage 8
+#define nbPointImage2 101
 
 
 void affichage();
@@ -69,44 +69,55 @@ Point plan[4];
 int fplan[4];
 
 //Variable pour stocker l'image non déformer
-Point objet[nbPointImage];
-int fobjet[2][4];
+Point objet[nbPointImage2];
+int fobjet[51][4];
 
 //Variable pour stocker l'image deformer
-Point imageReflete[nbPointImage];
-int fimageReflete[2][4];
+Point imageReflete[nbPointImage2];
+int fimageReflete[51][4];
 
-
-//Fonction qui génère l'image non déformer
+//Fonction qui génère l'image non déformer 2
 void genererObjet(){
 
     //On créer les points
-    Point tmp;
-    tmp.x = -3.0;tmp.y = 0.0;tmp.z = 3.0;
-    tmp.r = 0.4;tmp.g = 0.2;tmp.b = 0.0;
-    objet[0] = tmp;
-    Point tmp2;
-    tmp2.x = 3.0;tmp2.y = 0.0;tmp2.z = 3.0;
-    tmp2.r = 0.4;tmp2.g = 0.2;tmp2.b = 0.0;
-    objet[1] = tmp2;
-    Point tmp3;
-    tmp3.x = -3.0;tmp3.y = 0.0;tmp3.z = 9.0;
-    tmp3.r = 0.4;tmp3.g = 0.2;tmp3.b = 0.0;
-    objet[2] = tmp3;
-    Point tmp4;
-    tmp4.x = 3.0;tmp4.y = 0.0;tmp4.z = 9.0;
-    tmp4.r = 0.4;tmp4.g = 0.2;tmp4.b = 0.0;
-    objet[3] = tmp4;
-    tmp4.x = 0.0;tmp4.y = 0.0;tmp4.z = 11.0;
-    tmp4.r = 0.4;tmp4.g = 0.2;tmp4.b = 0.0;
-    objet[4] = tmp4;
-    tmp4.x = 0.0;tmp4.y = 0.0;tmp4.z = 3.0;
-    tmp4.r = 0.4;tmp4.g = 0.2;tmp4.b = 0.0;
-    objet[5] = tmp4;
+    int cpt = 0;
+    //On calcule tout les point du cercle du bas
+    for(int i = 0;i<50;i++){
+            Point tmp;
+            tmp.x = 2*cos(i*(2*M_PI/cranCylindre));//Formule d'un cercle
+            tmp.y = 0;
+            tmp.z = 2*sin(i*(2*M_PI/cranCylindre))+6;
 
-    //On enregistre les faces
-    fobjet[0][0] = 0;fobjet[0][1] = 5;fobjet[0][2] = 4;fobjet[0][3] = 2;
-    fobjet[1][0] = 1;fobjet[1][1] = 5;fobjet[1][2] = 4;fobjet[1][3] = 3;
+            tmp.r = 0.0;
+            tmp.g = 0.0;
+            tmp.b = 1.0;
+
+            objet[cpt] = tmp;
+            cpt++;
+    }
+    for(int i = 0;i<50;i++){
+            Point tmp;
+            tmp.x = 4*cos(i*(2*M_PI/cranCylindre));//Formule d'un cercle
+            tmp.y = 0;
+            tmp.z = 4*sin(i*(2*M_PI/cranCylindre))+6;
+
+            tmp.r = 1.0;
+            tmp.g = 0.0;
+            tmp.b = 0.0;
+
+            objet[cpt] = tmp;
+            cpt++;
+    }
+}
+
+genererFaceObjet(){
+    //On relie les les points du cercle du haut et du bas pour créer le cercle
+        for(int i=0;i< 50*2+1;i++){
+            fobjet[i][0] = i;
+            fobjet[i][1] = (i+1)%(50*2);
+            fobjet[i][2] = (i+1+49)%(50*2);
+            fobjet[i][3] = (i+49)%(50*2);
+        }
 }
 
 //Fonction pour génerer le plan 2D
@@ -221,7 +232,7 @@ void genererImageDeforme(){
     double alpha;
 
     //On utilise une boucle pour parcourir tout les points de l'image normale
-    for(int i=0;i<nbPointImage;i++){
+    for(int i=0;i<101;i++){
         pv.x = posx;
         pv.y = posy;
         pv.z = posz;
@@ -275,10 +286,13 @@ void genererImageDeforme(){
         printf("%d : %f \n",i,tmp.y);
         imageReflete[i] = tmp;
     }
-    //On créer les faces de l'objet deformer
-    //Il suffit juste de prendre les point de l'image deformer et les les lier entre  eux comme pour l'image non deformer
-    fimageReflete[0][0] = 0;fimageReflete[0][1] = 5;fimageReflete[0][2] = 4;fimageReflete[0][3] = 2;
-    fimageReflete[1][0] = 1;fimageReflete[1][1] = 5;fimageReflete[1][2] = 4;fimageReflete[1][3] = 3;
+
+    for(int i=0;i< 50*2+1;i++){
+            fimageReflete[i][0] = i;
+            fimageReflete[i][1] = (i+1)%(50*2);
+            fimageReflete[i][2] = (i+1+49)%(50*2);
+            fimageReflete[i][3] = (i+49)%(50*2);
+        }
 }
 
 int main(int argc,char **argv)
@@ -289,6 +303,7 @@ int main(int argc,char **argv)
   genererCylindre();
   genereFaceCylindreQuadra();
   genererObjet();
+  genererFaceObjet();
   genererPlan();
   genererImageDeforme();
 
@@ -376,13 +391,13 @@ void affichage()
 
       //Génération Objet
       glBegin(GL_POINTS);
-      for (int i=0;i<nbPointImage;i++){
+      for (int i=0;i<nbPointImage2;i++){
           glColor3f(objet[i].r,objet[i].g,objet[i].b);
           glVertex3f(objet[i].x,objet[i].y,objet[i].z);
       }
       glEnd();
 
-    for(int i = 0;i<2;i++){
+    for(int i = 0;i<51;i++){
       glBegin(GL_POLYGON);
         for (j=0;j<4;j++){
           glColor3f(objet[fobjet[i][j]].r,objet[fobjet[i][j]].g,objet[fobjet[i][j]].b);
@@ -393,13 +408,13 @@ void affichage()
 
       //Génération image reflete
       glBegin(GL_POINTS);
-      for (int i=0;i<nbPointImage;i++){
+      for (int i=0;i<nbPointImage2;i++){
           glColor3f(imageReflete[i].r,imageReflete[i].g,imageReflete[i].b);
           glVertex3f(imageReflete[i].x,imageReflete[i].y,imageReflete[i].z);
       }
       glEnd();
 
-      for(int i = 0;i<2;i++){
+      for(int i = 0;i<51;i++){
       glBegin(GL_POLYGON);
         for (j=0;j<4;j++){
           glColor3f(imageReflete[fimageReflete[i][j]].r,imageReflete[fimageReflete[i][j]].g,imageReflete[fimageReflete[i][j]].b);
