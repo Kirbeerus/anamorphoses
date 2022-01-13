@@ -110,7 +110,7 @@ void genererObjet(){
     }
 }
 
-genererFaceObjet(){
+void genererFaceObjet(){
     //On relie les les points du cercle du haut et du bas pour créer le cercle
         for(int i=0;i< 50*2+1;i++){
             fobjet[i][0] = i;
