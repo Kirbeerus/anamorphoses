@@ -104,14 +104,14 @@ void genererObjet(){
     tmp4.r = 0.4;tmp4.g = 0.2;tmp4.b = 0.0;
     objet[5] = tmp4;
 
-    //On enregistre les faces
+    //On enregistre les faces de l'objet
     fobjet[0][0] = 0;fobjet[0][1] = 5;fobjet[0][2] = 4;fobjet[0][3] = 2;
     fobjet[1][0] = 1;fobjet[1][1] = 5;fobjet[1][2] = 4;fobjet[1][3] = 3;
 }
 
 //Fonction pour génerer le plan 2D
 void genererPlan(){
-    //On généère les 4 coin du plan
+    //On créer les 4 coin du Plan
     Point tmp;
     tmp.x = -taillePlan;
     tmp.y = -taillePlan;
@@ -206,13 +206,14 @@ void genereFaceCylindreQuadra(){
 //Fonction qui génère l'image deformer
 void genererImageDeforme(){
     //On initialise toutes les variables nécéssaire au différents calcules
-    Point pvprime;
-    Point pI;
+
     Point pv; //Point correspondant à la caméra
     Point pP; //Point correspondant à un point de l'image
-    double p;
-    double pprime;
-    double pn;
+    Point pI;  //Interserction entre le cylindre et le vecteur pPpv
+    Point pvprime;  //Symétrique de pv par rapport à la normale en N
+    double p;   //Coefficient permmettant de calculer pI dans le formule (1-p)*pv+p*pP
+    double pprime;  //Une des deux solutions du polynome du second degré
+    double pn;  //Une des deux solutions du polynome du second degré
     double delta;
     double a;
     double b;

@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1641524708 source:d:\kirby\bureau\cours\master 1\projet\mgsi\opengl\main.cpp
+1641525236 source:d:\kirby\bureau\cours\master 1\projet\mgsi\opengl\main.cpp
 	<GLUT/glut.h>
 	<GL/glut.h>
 	<cstdlib>
@@ -392,7 +392,31 @@
 	<iostream>
 	<cmath>
 
-1641529452 source:d:\kirby\bureau\cours\master 1\projet\mgsi\opengl\main3.cpp
+1641529533 source:d:\kirby\bureau\cours\master 1\projet\mgsi\opengl\main3.cpp
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<cstdlib>
+	<ctime>
+	<iostream>
+	<cmath>
+
+1641777045 source:d:\kirby\bureau\cours\master 1\projet\mgsi\opengl\figure1.cpp
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<cstdlib>
+	<ctime>
+	<iostream>
+	<cmath>
+
+1641527621 source:d:\kirby\bureau\cours\master 1\projet\mgsi\opengl\figure2.cpp
+	<GLUT/glut.h>
+	<GL/glut.h>
+	<cstdlib>
+	<ctime>
+	<iostream>
+	<cmath>
+
+1641529533 source:d:\kirby\bureau\cours\master 1\projet\mgsi\opengl\figure3.cpp
 	<GLUT/glut.h>
 	<GL/glut.h>
 	<cstdlib>
