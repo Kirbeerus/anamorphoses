@@ -448,8 +448,6 @@ void clavier(unsigned char touche,int x,int y)
 //Touche pour deplacer la caméra
 void processSpecialKeys(int key, int xx, int yy) {
 
-	float fraction = 0.1f;
-
 	switch (key) {
 		case GLUT_KEY_LEFT :
 			posx =posx-0.5; //On déplace la caméra à gauche
